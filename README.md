@@ -14,3 +14,5 @@ Mise en place de commitlint et de husky pour formaté par défaut les commits
 
 On prends la convention AirBnb pour la base.
 identation 4 espaces
+Limitation des ligne à 110 carctères max
+limitation des ligne ignoré pour le URL
