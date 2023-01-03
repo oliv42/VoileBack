@@ -10,7 +10,7 @@ module.exports = {
     parserOptions: {
         ecmaVersion: 'latest',
     },
-    // dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+
     rules: {
         indent: ['error', 4],
         'no-console': ['error', { allow: ['warn', 'error'] }],
