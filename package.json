@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "localtest": "node ./app/index.js",
+    "localtest": "nodemon ./index.js",
     "dockerstart": "docker build -t sitevoile_node19_alpin3.16 . && docker run -p 8080:8080 sitevoile_node19_alpin3.16",
-    "start": "node ./app/index.js"
+    "start": "node ./index.js"
   },
   "repository": {
     "type": "git",

@@ -21,5 +21,6 @@ module.exports = {
                 ignoreUrls: true,
             },
         ],
+        'import/extensions': ['ignorePackages'],
     },
 };
