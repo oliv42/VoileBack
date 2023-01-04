@@ -1,22 +1,14 @@
 import express from 'express';
+import paraglindingRouter from './paraglinding.js'
 
 const router = express.Router();
 
 
 
-router.use('/api/paragliding/:id', (req, res) => {
-    const idParagliding = req.params.id;
-    console.log(idParagliding)
-    res.send(`test route paraglinding ${idParagliding}`);
-})
+router.use('/api/paragliding', paraglindingRouter)
 
-router.use('/api/paragliding', (_, res) => {
-    res.send('test route paraglinding');
-})
-
-router.use('/', (_, res) => {
-    res.send('test route /');
-})
-
+router.use((_req, res) => {
+    res.status(404).json({ message: 'page not found' });
+  });
 
 export default router;
