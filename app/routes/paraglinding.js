@@ -1,17 +1,13 @@
-import express from "express";
+import express from 'express';
+import apiControlleur from '../helpers/apiController.js'
+import paraglindingControllers from '../controllers/paraglinding.controllers.js';
 
 const router = express.Router()
 
 router.route('/:id(\\d+)')
-    .get((req, rep) => {
-        const idParaglinding = req.params.id;
-        rep.send(`controller paradilinding getOne id: ${idParaglinding}`);
-
-    })
+    .get(apiControlleur(paraglindingControllers.getOne))
 
 router.route('/')
-    .get((_req, rep) => {
-        rep.send('controller paradilinding getAll');
-    })
+    .get(apiControlleur(paraglindingControllers.getAll))
 
     export default router;
