@@ -2,3 +2,5 @@
 %project=sitevoiles
 %uri=https://github.com/oliv42/VoileBack
 
+initDbMvp 2023-01-10T10:04:53Z Olivier <olivier.reboul@gmail.com> # initiation de la db pour la mvp
+seedingMVP 2023-01-10T15:43:49Z Olivier <olivier.reboul@gmail.com> # initiale seeding for the mvp
