@@ -3,7 +3,8 @@ export default(controller) => async (req, res, next) => {
     await controller(req, res, next);
   } catch (err) {
     console.log('err:', err);
-    next(new ApiError(err.statusCode, err.message));
+    //todo make the erreur gestion
+    //next(new ApiError(err.statusCode, err.message));
 
   }
 };

@@ -10,4 +10,4 @@ router.route('/:id(\\d+)')
 router.route('/')
     .get(apiControlleur(paraglindingControllers.getAll))
 
-    export default router;
+export default router;
