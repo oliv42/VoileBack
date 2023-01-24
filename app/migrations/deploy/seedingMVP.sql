@@ -2,7 +2,7 @@
 
 BEGIN;
 
-INSERT INTO "paraglinding"("name","type","release_year")
+INSERT INTO "paraglider"("name","type","release_year")
 VALUES
 ('Tonic 2','all-rounders',2019),
 ('Arcus RS','all-rounders',2017),

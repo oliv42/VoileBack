@@ -4,7 +4,7 @@ BEGIN;
 
 -- minimum DB mvp
 
-CREATE TABLE "paraglinding"(
+CREATE TABLE "paraglider"(
     "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "name" TEXT NOT NULL UNIQUE,
     "type" TEXT,
