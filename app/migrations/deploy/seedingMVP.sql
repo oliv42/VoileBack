@@ -14,6 +14,8 @@ VALUES
 ('Mentor 6 Light','all-rounders',2019),
 ('Hadron1.1','all-rounders',2011),
 ('Bodyguard 7','all-rounders',2017),
-('XCRacer','all-rounders',2017);
+('XCRacer','all-rounders',2017),
+('LaReboul','all-rounders',2023),
+('LaCornu','Biplace',2023);
 
 COMMIT;
