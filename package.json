@@ -9,7 +9,7 @@
     "localtest": "nodemon ./index.js",
     "dockerstart": "docker build -t sitevoile_node19_alpin3.16 . && docker run -p 3000:8080 sitevoile_node19_alpin3.16",
     "start": "node ./index.js",
-    "ResetDb": "cd app/migrations && sqitch revert LocalDb -y && sqitch deploy LocalDb   "
+    "ResetDb": "sqitch revert -y && sqitch deploy"
   },
   "repository": {
     "type": "git",

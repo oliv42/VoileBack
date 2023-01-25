@@ -2,7 +2,7 @@ import client from '../config/postgres.js'
 
 const datamapper = {
     findAll : async () => {
-        const result = await client.query('SELECT * FROM "paraglider"');
+        const result = await client.query(`SELECT paraglider.*, maker.name AS maker_name FROM paraglider JOIN maker ON "idMaker"=maker.id`);
         return result.rows;
     },
 
@@ -15,3 +15,8 @@ const datamapper = {
 }
 
 export default datamapper;
+
+
+// 'SELECT "paraglider.*, "maker.is" AS "maker_id", "maker.name" AS "maker_name"  FROM "paraglider" JOIN "maker" ON "paraglider.idMaker"="maker.id"'
+// 'SELECT *, "maker.is" AS "maker_id", "maker.name" AS "maker_name"  FROM "paraglider" JOIN "maker" ON "paraglider.idMaker"="maker.id"'
+// 'SELECT "paraglider.*", "maker.id" AS "maker_id", "maker.name" AS "maker_name" FROM "paraglider" JOIN "maker" ON "paraglider.idMaker"="maker.id"'
