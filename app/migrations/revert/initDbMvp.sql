@@ -2,7 +2,6 @@
 
 BEGIN;
 
-DROP TABLE
-    "paraglider";
+
 
 COMMIT;
