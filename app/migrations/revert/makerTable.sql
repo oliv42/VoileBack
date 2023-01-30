@@ -3,7 +3,6 @@
 BEGIN;
 
 DROP TABLE
-    "paraglider",
-    "maker";
+    "paraglider";
 
 COMMIT;
