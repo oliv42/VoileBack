@@ -25,7 +25,37 @@ const DelecteAllImagesCloudinary = async () => {
     return null;
 };
 
-const photoSeedingSQL = `-- Deploy sitevoiles:photo_paraglider to pg
+const createFolder = async (folderPath, subfolderName = "") => {
+    cloudinary.api.create_folder(
+        folderPath + "/" + subfolderName,
+        function (error, result) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(result);
+            }
+        }
+    );
+};
+
+const uploadImage = async (imagePath, folderTree) => {
+    const options = {
+        use_filename: true,
+        unique_filename: false,
+        overwrite: true,
+    };
+
+    try {
+        const result = await cloudinary.uploader.upload(imagePath, options, {
+            folder: folderTree,
+        });
+        return result.url;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const photoSeedingSQLSart = `-- Deploy sitevoiles:photo_paraglider to pg
 
 BEGIN;
 
@@ -42,14 +72,9 @@ CREATE TABLE "photo_paraglider"(
 
 INSERT INTO "photo_paraglider"("photo_1","photo_2","photo_3","photo_4","photo_5","photo_6","id_paraglider")
 VALUES
-(null,null,null,null,null,null,1),
-('https://res.cloudinary.com/daqwgsko2/image/upload/v1674839902/Paraglider/Arcus_RC/swing_arcus2rs_slider_arcuslime9_snqcyb.jpg',
-'https://res.cloudinary.com/daqwgsko2/image/upload/v1674841180/Paraglider/Arcus_RC/swing_arcus2rs_slider_arcuslim4_ephyby.jpg',
-'https://res.cloudinary.com/daqwgsko2/image/upload/v1674841185/Paraglider/Arcus_RC/swing_arcus2rs_slider_arcus7_ryt4bs.jpg',
-'https://res.cloudinary.com/daqwgsko2/image/upload/v1674841190/Paraglider/Arcus_RC/swing_arcus2rs_slider_arcus6_oqvfii.jpg',
-null,null,2),
-(null,null,null,null,null,null,3),
-(null,null,null,null,null,null,4),
+`;
+
+const photoSeedingSQLEnd = `(null,null,null,null,null,null,4),
 (null,null,null,null,null,null,5),
 (null,null,null,null,null,null,6),
 (null,null,null,null,null,null,7),
@@ -61,9 +86,7 @@ null,null,2),
 (null,null,null,null,null,null,13);
 
 
-COMMIT;
-`;
-
+COMMIT;`;
 //Psedocode pour la génération de la table qui fera le Seeding:
 //Etape 1 Upload les photos
 //parcour du dossier de photos
@@ -71,29 +94,80 @@ COMMIT;
 // Récuperation des url
 //Génération du fichier SQL en incluant les URL
 
-const ImageSeeding = async () => {
+const imageSeeding = async () => {
+    const pathImages = "/home/olivier/Images/Paraglider";
+    const folders = fs.readdirSync(pathImages);
 
-    const pathImagesParaglider = "/home/olivier/Images/Paraglider"
-    const folders = fs.readdirSync(pathImagesParaglider);
+    const foldersTreeImagesFiles = folders.map((subfolder) => {
+        const pathImagesSubFolder = pathImages + "/" + subfolder;
+        const filesSubFolder = fs.readdirSync(pathImagesSubFolder);
 
-    const foldersTreeImagesFiles = folders.map( (subfolder) => {
-
-        const pathImagesSubFolder = pathImagesParaglider + '/' + subfolder;
-        const filesSubFolder = fs.readdirSync(pathImagesSubFolder)
-
-        const ImagesParagilder = filesSubFolder.filter((file) => file.includes('.'))
+        const ImagesParagilder = filesSubFolder.filter((file) =>
+            file.includes(".")
+        );
+        const colorParaglider = fs.readdirSync(pathImagesSubFolder + "/Color");
 
         const treeImageFiles = {
-            directoryName: subfolder,
-            ImagesParagilder: ImagesParagilder
-        }
-
+            subfolderName: subfolder,
+            ImagesParagilder: ImagesParagilder,
+            color: colorParaglider,
+        };
 
         return treeImageFiles;
-    })
+    });
 
-    console.log(foldersTreeImagesFiles);
+    // Upload images and getting the url of them
+    const allUrl = foldersTreeImagesFiles.map(async (paraFolder) => {
+        const uploadAllImage = paraFolder.ImagesParagilder.reduce(
+            (accu, image, index) => {
+                return accu.then(async (result) => {
+                    const pathfolder =
+                        pathImages + "/" + paraFolder.subfolderName;
+                    const pathImage = pathfolder + "/" + image;
+                    const folderCoulidinary =
+                        "paraglider/" + paraFolder.subfolderName;
+                    const url = await uploadImage(pathImage, folderCoulidinary);
+                    return { ...result, urls: [...result.urls, url] };
+                });
+            },
+            Promise.resolve({ name: paraFolder.subfolderName, urls: [] })
+        );
+
+        const UrlImageParaglider = await uploadAllImage;
+        return UrlImageParaglider;
+    });
+
+    const allUrlImages = await Promise.all(allUrl);
+    console.log(allUrlImages);
+
+    const seedingPhoto = allUrlImages.reduce((accu, urlsImages) => {
+        // (null,null,null,null,null,null,4)
+        const idValue = {
+            Arcus_Rs: 2,
+            Coden_Pro: 3,
+            Tonic_2: 1,
+        };
+        let sqlEntry = "(";
+
+        for (let i = 0; i < 6; i++) {
+            urlsImages.urls[i]
+                ? (sqlEntry += "'" + urlsImages.urls[i] + "',\n")
+                : (sqlEntry += "null,");
+        }
+        sqlEntry += `${idValue[urlsImages.name]}),\n`;
+
+        return (accu += sqlEntry);
+    }, "");
+
+    const finaleSeeding = photoSeedingSQLSart + seedingPhoto + photoSeedingSQLEnd;
+    console.log(finaleSeeding)
+
+    writeTofile("DataCloudinary.sql", finaleSeeding);
 };
+
+
+
+
 
 const writeTofile = async (fileName, data) => {
     try {
@@ -108,8 +182,7 @@ const writeTofile = async (fileName, data) => {
     }
 };
 
-// writeTofile("DataCloudinary.sql", photoSeedingSQL);
-ImageSeeding();
 
+imageSeeding();
 
 // DelecteAllImagesCloudinary();
