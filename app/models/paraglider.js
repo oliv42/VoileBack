@@ -2,13 +2,19 @@ import client from '../config/postgres.js'
 
 const datamapper = {
     findAll : async () => {
-        const result = await client.query(`SELECT
-        paraglider.*,
-        array_agg(row(photo_paraglider.photo_1, photo_paraglider.photo_2,photo_paraglider.photo_3, photo_paraglider.photo_4,photo_paraglider.photo_5,photo_paraglider.photo_6)) AS photos
-        FROM paraglider
-        JOIN photo_paraglider
-        ON paraglider.id = photo_paraglider.id_paraglider
-        GROUP BY paraglider.id
+        const result = await client.query(`WITH photos AS (
+            SELECT
+              id_paraglider,
+              ARRAY[photo_1, photo_2, photo_3, photo_4, photo_5, photo_6] AS photos
+            FROM photo_paraglider
+          )
+          SELECT
+            paraglider.*,
+            array_agg(photos.photos) AS photos
+          FROM paraglider
+          JOIN photos
+          ON photos.id_paraglider = paraglider.id
+          GROUP BY paraglider.id;
         `);
         //! Console log a supprimé
         console.log(result)
